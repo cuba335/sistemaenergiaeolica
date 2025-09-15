@@ -42,7 +42,7 @@ export default function UsuarioDetalle() {
         <Link to="/usuarios" className="btn btn-outline-secondary">← Volver</Link>
       </div>
 
-      {cargando && <p>Cargando…</p>}
+      {cargando && <p>Buscando..</p>}
       {error && <div className="alert alert-danger">{error}</div>}
       {!cargando && !u && !error && <p className="text-muted">No encontrado.</p>}
 
