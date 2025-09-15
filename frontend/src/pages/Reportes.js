@@ -32,7 +32,7 @@ function Reportes() {
 
   const cargarDatos = async () => {
     if (!fechaInicio || !fechaFin) {
-      setError("Por favor ingresa ambas fechas");
+      setError("Por favor debe ingresar ambas fechas");
       return;
     }
     if (fechaInicio > fechaFin) {
@@ -181,7 +181,7 @@ function Reportes() {
       </div>
 
       {error && <div className="alert alert-danger text-center mb-4">{error}</div>}
-      {cargando && <p className="text-center">Cargando datos...</p>}
+      {cargando && <p className="text-center">Cargando datos</p>}
 
       {datos.length > 0 && (
         <>
