@@ -15,7 +15,7 @@ function Footer() {
           <FaFacebook />
         </a>
         <a
-          href="https://wa.me/123456789"
+            href="https://wa.me/59169529957" // ¡Aquí está la modificación!
           target="_blank"
           rel="noopener noreferrer"
           aria-label="WhatsApp"
