@@ -1,0 +1,11 @@
+# Directorio de dependencias
+node_modules/
+
+# Archivo de variables de entorno
+.env
+
+# Archivo de bloqueo
+package-lock.json
+
+# Archivos de log
+npm-debug.log*

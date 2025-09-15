@@ -1,0 +1,320 @@
+/* Fondo suave con degradado ecológico */
+body {
+  background: linear-gradient(135deg, #d0f7c0, #c0ddff);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #0a2e0a; /* verde oscuro para texto */
+}
+
+/* Contenedor principal */
+.container {
+  width:95%;           /* ocupa el 90% del ancho del viewport */
+  max-width: 1200px;    /* no se extiende más allá de 1200px */
+  margin: 20px auto;    /* centra horizontalmente */
+  padding: 35px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 6px 6px 15px rgba(0, 100, 0, 0.15);
+  box-sizing: border-box;
+}
+
+
+
+/* Navbar colores */
+.navbar {
+  color: #0a2e0a;
+  background-color: #1b6b1b !important; /* verde oscuro */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  
+}
+
+.navbar-nav .nav-link:hover,
+footer a:hover {
+  color: #a3d9a5 !important; /* verde claro */
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.titulo-container {
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
+.titulo-animado {
+  font-size: 1rem;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  text-align: center;
+  width: 100%;
+}
+
+/* Animación suave */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Escala responsiva */
+@media (min-width: 768px) {
+  .titulo-animado {
+    font-size: 2.5rem;
+  }
+}
+@media (min-width: 1200px) {
+  .titulo-animado {
+    font-size: 3rem;
+  }
+}
+
+.boton-hamburguesa {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1050; /* Encima de todo */
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: none; /* Oculto por defecto */
+}
+
+/* Mostrar solo en pantallas pequeñas */
+@media (max-width: 991px) {
+  .boton-hamburguesa {
+    display: block;
+  }
+}
+
+.nav-enlaces-grandes .nav-link {
+  font-size: 1.2rem; /* puedes aumentar más si deseas, por ejemplo 1.4rem */
+  font-weight: 500;
+}
+
+.footer {
+  background-color: #0a0a23;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 5px;
+  font-family: 'Arial', sans-serif;
+}
+
+.social-icons {
+  margin-bottom: 10px;
+}
+
+.social-icons a {
+  color: white;
+  margin: 0 15px;
+  font-size: 24px;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #00ffae;
+}
+
+.footer-text {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+
+/* Botones con sombra y transición */
+.btn-primary {
+  background-color: #1b6b1b;
+  border-color: #155215;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(27, 107, 27, 0.5);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #155215;
+  box-shadow: 0 5px 15px rgba(21, 82, 21, 0.7);
+}
+
+/* Tablas elegantes */
+table {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+th {
+  background-color: #1b6b1b;
+  color: white;
+  padding: 12px 15px;
+  border-radius: 8px 8px 0 0;
+  text-align: left;
+}
+
+td {
+  background-color: #f0f9f0;
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+  border-radius: 0 0 8px 8px;
+}
+
+/* Alertas */
+.alert {
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Animaciones con keyframes */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Inputs de fecha y texto estilizados */
+input.form-control {
+  border-radius: 8px;
+  border: 1.5px solid #1b6b1b;
+  transition: border-color 0.3s ease;
+}
+
+input.form-control:focus {
+  border-color: #155215;
+  box-shadow: 0 0 5px rgba(21, 82, 21, 0.7);
+}
+
+/* Animación suave para alertas */
+.animate-alert {
+  animation: pulseAlert 1.5s infinite alternate;
+}
+
+@keyframes pulseAlert {
+  0% {
+    box-shadow: 0 0 8px rgba(255, 69, 58, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 69, 58, 0.4);
+  }
+}
+
+.card-body {
+  position: relative; /* para que el canvas de chart se ajuste bien */
+}
+
+.card-body canvas {
+  /* Que el canvas use el tamaño del contenedor */
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Mejoras para formulario y tabla en Usuarios.jsx */
+
+/* Fondo blanco, sombra suave y bordes redondeados para tarjetas */
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* Inputs con transición y borde verde oscuro al enfocar */
+input.form-control,
+select.form-select {
+  border: 1.8px solid #1b6b1b; /* verde oscuro de tu paleta */
+  border-radius: 8px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+input.form-control:focus,
+select.form-select:focus {
+  border-color: #155215; /* verde aún más oscuro */
+  box-shadow: 0 0 8px rgba(21, 82, 21, 0.4);
+  outline: none;
+}
+
+/* Botones con bordes redondeados y transiciones suaves */
+.btn-primary {
+  background-color: #1b6b1b;
+  border-color: #155215;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover {
+  background-color: #155215;
+  box-shadow: 0 4px 12px rgba(21, 82, 21, 0.5);
+}
+.btn-warning {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+.btn-danger {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+/* Tabla con filas separadas, bordes redondeados y efecto hover */
+table {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  font-size: 0.95rem;
+}
+thead th {
+  background-color: #1b6b1b;
+  color: white;
+  border-radius: 8px;
+  padding: 12px 15px;
+  text-align: center;
+}
+tbody tr {
+  background-color: #f0f9f0;
+  border-radius: 8px;
+  transition: background-color 0.25s ease;
+}
+tbody tr:hover {
+  background-color: #d0f7c0; /* verde claro para hover */
+}
+tbody td {
+  vertical-align: middle;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+/* Botones pequeños redondeados */
+.btn-sm {
+  border-radius: 6px;
+  padding: 5px 10px;
+}
+
+/* Contenedor de botones en fila */
+.d-flex > button {
+  min-width: 80px;
+}
+
+/* Botones reporte a la derecha */
+.text-end .btn-info {
+  background-color: #3be73b;
+  border-color: #155215;
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 8px 16px;
+  transition: background-color 0.3s ease;
+}
+.text-end .btn-info:hover {
+  background-color: #155215;
+}
