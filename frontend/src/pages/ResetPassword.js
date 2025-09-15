@@ -61,7 +61,7 @@ export default function ResetPassword() {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Repite la contraseña</Form.Label>
+            <Form.Label>Repita la nueva contraseña</Form.Label>
             <Form.Control
               type="password"
               value={pass2}
