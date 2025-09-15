@@ -520,7 +520,7 @@ export default function DashboardAdmin() {
             </span>
           </div>
           {alertas.length === 0 ? (
-            <p className="text-muted m-0">Sin alertas recientes.</p>
+            <p className="text-muted m-0">No hay alertas recientes.</p>
           ) : (
             <ul className="list-group">
               {alertas.slice(0, 8).map((a, i) => (
