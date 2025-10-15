@@ -8,6 +8,8 @@ import {
   Offcanvas,
   Button,
   Modal,
+  Spinner,
+  Badge,
 } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import api from "../api/axios";
@@ -17,9 +19,9 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
-  const [me, setMe] = useState(null);             // <- /me-detalle
+  const [me, setMe] = useState(null);                   // /me-detalle
   const [loadingMe, setLoadingMe] = useState(true);
-  const [showPerfil, setShowPerfil] = useState(false); // <- Modal "Mi perfil"
+  const [showPerfil, setShowPerfil] = useState(false);  // Modal "Mi perfil"
 
   const paisajes = ["/paisaje1.jpg", "/paisaje3.png", "/paisaje2.jpg"];
   const location = useLocation();
@@ -34,7 +36,7 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Cargar detalle del usuario (solo si hay token y no es login)
+  // Cargar detalle del usuario
   useEffect(() => {
     let cancel = false;
     const cargar = async () => {
@@ -104,6 +106,12 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
     } catch { return "—"; }
   };
 
+  const copy = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text || "");
+    } catch { /* no-op */ }
+  };
+
   return (
     <>
       <Navbar
@@ -138,7 +146,7 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
           <div className="titulo-container">
             <h1
               className="titulo-animado text-white text-shadow m-0"
-              style={{ fontSize: "2rem", lineHeight: "56px"}}
+              style={{ fontSize: "2rem", lineHeight: "56px" }}
             >
               Sistema de Energía Eólica
             </h1>
@@ -166,12 +174,9 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
                     <Nav.Link as={Link} to="/usuarios" className="text-white nav-item-hover">
                       Usuarios
                     </Nav.Link>
-
-                    {/* ✅ NUEVO enlace sólo para admin */}
                     <Nav.Link as={Link} to="/eolicos" className="text-white nav-item-hover">
                       Alquiler
                     </Nav.Link>
-
                     <Nav.Link as={Link} to="/reportes" className="text-white nav-item-hover">
                       Reportes PDF
                     </Nav.Link>
@@ -190,13 +195,14 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
                           width: 28,
                           height: 28,
                           borderRadius: "50%",
-                          background: "#28a745",
+                          background: "linear-gradient(135deg,#22c55e,#16a34a)",
                           color: "white",
                           display: "inline-flex",
                           alignItems: "center",
                           justifyContent: "center",
                           fontSize: 13,
                           marginRight: 8,
+                          boxShadow: "0 0 0 2px rgba(255,255,255,.2)",
                         }}
                       >
                         {getInitials(displayName)}
@@ -258,12 +264,9 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
                   <Nav.Link as={Link} to="/usuarios" onClick={handleClose} className="nav-item-hover">
                     Usuarios
                   </Nav.Link>
-
-                  {/* ✅ NUEVO enlace mobile sólo admin */}
                   <Nav.Link as={Link} to="/eolicos" onClick={handleClose} className="nav-item-hover">
                     Alquiler
                   </Nav.Link>
-
                   <Nav.Link as={Link} to="/reportes" onClick={handleClose} className="nav-item-hover">
                     Reportes PDF
                   </Nav.Link>
@@ -281,7 +284,7 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
                         width: 24,
                         height: 24,
                         borderRadius: "50%",
-                        background: "#28a745",
+                        background: "linear-gradient(135deg,#22c55e,#16a34a)",
                         color: "white",
                         display: "inline-flex",
                         alignItems: "center",
@@ -321,77 +324,160 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
         </Offcanvas>
       )}
 
-      {/* Modal Mi Perfil */}
-      <Modal show={showPerfil} onHide={closePerfil} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Mi perfil</Modal.Title>
-        </Modal.Header>
+      {/* Modal Mi Perfil (fullscreen en móviles) */}
+      <Modal
+        show={showPerfil}
+        onHide={closePerfil}
+        centered
+        dialogClassName="modal-fullscreen-sm-down"
+      >
+        <div className="position-relative">
+          {/* Cover */}
+          <div
+            style={{
+              height: 140,
+              background:
+                "linear-gradient(135deg, rgba(34,197,94,0.9), rgba(16,185,129,0.9)), url('/paisaje2.jpg') center/cover",
+              borderTopLeftRadius: ".3rem",
+              borderTopRightRadius: ".3rem",
+            }}
+          />
+          {/* Avatar */}
+          <div
+            style={{
+              position: "absolute",
+              top: 90,
+              left: 24,
+              width: 72,
+              height: 72,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg,#22c55e,#16a34a)",
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 28,
+              boxShadow: "0 6px 18px rgba(0,0,0,.2)",
+              border: "3px solid white",
+            }}
+          >
+            {getInitials(displayName)}
+          </div>
+        </div>
+
+        <Modal.Header closeButton className="pt-4" />
+
         <Modal.Body>
-          <div className="d-flex align-items-center mb-3">
-            <div
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: "50%",
-                background: "#28a745",
-                color: "white",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 18,
-                marginRight: 12,
-              }}
-            >
-              {getInitials(displayName)}
-            </div>
-            <div>
-              <div className="fw-bold" style={{ fontSize: 16 }}>
-                {loadingMe ? "Cargando..." : (me?.nombre_completo || displayName)}
+          {/* Header info */}
+          <div className="d-flex flex-wrap align-items-end gap-2 ps-2" style={{ marginTop: -32 }}>
+            <div className="me-auto" style={{ minWidth: 0 }}>
+              <div className="fw-bold" style={{ fontSize: 18 }}>
+                {loadingMe ? (
+                  <span className="text-muted">
+                    <Spinner animation="grow" size="sm" /> Cargando…
+                  </span>
+                ) : (
+                  me?.nombre_completo || displayName
+                )}
               </div>
-              <small className="text-muted">
-                {me?.rol ? me.rol.charAt(0).toUpperCase() + me.rol.slice(1) : "—"}
-              </small>
+              {/* login puede ser largo: permitir quiebre */}
+              <div
+                className="text-muted small text-break"
+                style={{ wordBreak: "break-word", overflowWrap: "anywhere" }}
+              >
+                {me?.login || "—"}
+              </div>
             </div>
+            {rol && (
+              <Badge bg={rol === "administrador" ? "danger" : "success"} pill>
+                {rol.charAt(0).toUpperCase() + rol.slice(1)}
+              </Badge>
+            )}
           </div>
 
-          <div className="row g-2">
+          {/* Datos */}
+          <div className="row g-3 mt-2">
             <div className="col-12 col-md-6">
-              <div className="border rounded p-2 h-100">
-                <div className="text-muted small">Usuario (login)</div>
-                <div>{me?.login || "—"}</div>
+              <div className="border rounded px-3 py-2 h-100">
+                <div className="d-flex justify-content-between align-items-center" style={{ gap: 8 }}>
+                  {/* minWidth:0 para que funcione el truncado/quiebre dentro de flex */}
+                  <div style={{ minWidth: 0 }}>
+                    <div className="text-muted small">Usuario (login)</div>
+                    <div
+                      className="fw-semibold text-break"
+                      style={{ wordBreak: "break-word", overflowWrap: "anywhere" }}
+                    >
+                      {me?.login || "—"}
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline-secondary"
+                    onClick={() => copy(me?.login)}
+                    title="Copiar"
+                  >
+                    Copiar
+                  </Button>
+                </div>
               </div>
             </div>
 
             <div className="col-12 col-md-6">
-              <div className="border rounded p-2 h-100">
-                <div className="text-muted small">Email</div>
-                <div>{me?.email || "—"}</div>
+              <div className="border rounded px-3 py-2 h-100">
+                <div className="d-flex justify-content-between align-items-center" style={{ gap: 8 }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div className="text-muted small">Email</div>
+                    <div
+                      className="fw-semibold text-break"
+                      style={{ wordBreak: "break-word", overflowWrap: "anywhere" }}
+                    >
+                      {me?.email || "—"}
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline-secondary"
+                    onClick={() => copy(me?.email)}
+                    title="Copiar"
+                  >
+                    Copiar
+                  </Button>
+                </div>
               </div>
             </div>
 
             <div className="col-12 col-md-6">
-              <div className="border rounded p-2 h-100">
+              <div className="border rounded px-3 py-2 h-100">
                 <div className="text-muted small">Fecha de nacimiento</div>
-                <div>{fmtFecha(me?.fecha_nacimiento)}</div>
+                <div className="fw-semibold">{fmtFecha(me?.fecha_nacimiento)}</div>
               </div>
             </div>
 
             <div className="col-12 col-md-6">
-              <div className="border rounded p-2 h-100">
+              <div className="border rounded px-3 py-2 h-100">
                 <div className="text-muted small">Teléfono</div>
-                <div>{me?.telefono || "—"}</div>
+                <div className="fw-semibold">{me?.telefono || "—"}</div>
               </div>
             </div>
 
             <div className="col-12">
-              <div className="border rounded p-2 h-100">
+              <div className="border rounded px-3 py-2 h-100">
                 <div className="text-muted small">Dirección</div>
-                <div>{me?.direccion || "—"}</div>
+                <div
+                  className="fw-semibold text-break"
+                  style={{ wordBreak: "break-word", overflowWrap: "anywhere" }}
+                >
+                  {me?.direccion || "—"}
+                </div>
               </div>
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+
+        <Modal.Footer className="d-flex justify-content-between">
+          <div className="text-muted small">
+            {me?.email ? "Tus datos se muestran solo a ti." : ""}
+          </div>
           <Button variant="secondary" onClick={closePerfil}>
             Cerrar
           </Button>
@@ -403,6 +489,10 @@ function NavBarComponent({ usuario: usuarioProp, onLogout }) {
         .nav-item-hover:hover,
         .nav-item-hover:active { text-decoration: underline; }
         .text-shadow { text-shadow: 0 2px 6px rgba(0,0,0,.35); }
+        /* Ajustes del modal en pantallas pequeñas */
+        @media (max-width: 576px) {
+          .modal-fullscreen-sm-down .modal-body { padding-top: .5rem; }
+        }
       `}</style>
     </>
   );
