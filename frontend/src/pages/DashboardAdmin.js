@@ -321,7 +321,7 @@ export default function DashboardAdmin() {
       >
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
           <div>
-            <h2 className="mb-1">Dashboard — Administrador</h2>
+            <h2 className="mb-1">Administrador</h2>
             <div className="text-muted">Visión global del sistema</div>
           </div>
           <div className="d-flex align-items-center gap-3">
@@ -520,7 +520,7 @@ export default function DashboardAdmin() {
             </span>
           </div>
           {alertas.length === 0 ? (
-            <p className="text-muted m-0">No hay alertas recientes.</p>
+            <p className="text-muted m-0">Sin alertas recientes.</p>
           ) : (
             <ul className="list-group">
               {alertas.slice(0, 8).map((a, i) => (
