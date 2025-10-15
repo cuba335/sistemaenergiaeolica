@@ -11,10 +11,16 @@ function Login() {
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [currentImage, setCurrentImage] = useState(0);
-  const navigate = useNavigate();
 
+  // Fondo rotatorio
   const imagenesFondo = ["/paisaje1.jpg", "/paisaje2.jpg", "/paisaje3.png"];
+  const [currentImage, setCurrentImage] = useState(0);
+
+  // Fallback de logo
+  const [logoError, setLogoError] = useState(false);
+  const brandText = "EE"; // Cambia esto si quieres otras siglas
+
+  const navigate = useNavigate();
 
   // Si ya hay sesión, ir al dashboard
   useEffect(() => {
@@ -69,8 +75,10 @@ function Login() {
       navigate("/dashboard", { replace: true });
     } catch (err) {
       if (err.response) {
-        if (err.response.status === 423) setError("Cuenta bloqueada temporalmente. Intenta más tarde.");
-        else if (err.response.status === 401) setError("Usuario o contraseña incorrectos");
+        if (err.response.status === 423)
+          setError("Cuenta bloqueada temporalmente. Intenta más tarde.");
+        else if (err.response.status === 401)
+          setError("Usuario o contraseña incorrectos");
         else setError(err.response.data?.mensaje || "Error en el servidor");
       } else {
         setError("No se pudo conectar con el servidor");
@@ -84,22 +92,26 @@ function Login() {
 
   return (
     <>
+      {/* Barra superior */}
       <div
         style={{
           width: "100%",
           height: 100,
-          background: "#333",
+          background: "linear-gradient(90deg, #0d6efd, #198754)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           color: "#fff",
           fontWeight: 700,
           fontSize: "1.8rem",
+          letterSpacing: ".5px",
+          textShadow: "0 2px 6px rgba(0,0,0,.25)",
         }}
       >
         Sistema de Energía Eólica
       </div>
 
+      {/* Fondo + tarjeta */}
       <div
         style={{
           backgroundImage: `url(${fondoActual})`,
@@ -116,21 +128,51 @@ function Login() {
           style={{
             maxWidth: 500,
             width: "100%",
-            background: "rgba(255,255,255,.85)",
-            borderRadius: 15,
+            background: "rgba(255,255,255,.88)",
+            borderRadius: 16,
+            border: "1px solid rgba(0,0,0,.05)",
+            backdropFilter: "blur(2px)",
           }}
           className="p-4 shadow-lg"
         >
           <div className="text-center mb-3">
-            {/* Imagen cuadrada para evitar error de insertBefore */}
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={150}
-              height={150}
-              roundedCircle
-            />
+            {/* Si /logo.png carga bien -> mostrarlo; si falla -> fallback elegante */}
+            {!logoError ? (
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                width={140}
+                height={140}
+                roundedCircle
+                onError={() => setLogoError(true)}
+                style={{ objectFit: "cover", background: "#fff" }}
+              />
+            ) : (
+              <div
+                aria-label="Fallback Logo"
+                style={{
+                  width: 140,
+                  height: 140,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto",
+                  fontWeight: 800,
+                  fontSize: 42,
+                  color: "#fff",
+                  background:
+                    "conic-gradient(from 210deg, #0d6efd, #20c997, #198754, #0d6efd)",
+                  boxShadow: "inset 0 0 20px rgba(0,0,0,.15)",
+                  userSelect: "none",
+                }}
+                title="Marca"
+              >
+                {brandText}
+              </div>
+            )}
           </div>
+
           <h3 className="text-center mb-4">Iniciar Sesión</h3>
 
           {error && <Alert variant="danger">{error}</Alert>}
