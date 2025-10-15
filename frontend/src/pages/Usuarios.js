@@ -18,6 +18,14 @@ const passPolicy = (v) => {
 const onlyDigits = (v) => String(v || "").replace(/[^\d]/g, "");
 const toUpperSafe = (v) => (v ? String(v).toUpperCase() : v || "");
 
+/** Normalizador para búsqueda local */
+const normLoc = (s) =>
+  (s ?? "")
+    .toString()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+
 function Usuarios() {
   const navigate = useNavigate();
 
@@ -391,8 +399,11 @@ function Usuarios() {
 
   // Check rol para acceso
   const usuarioLogueado = (() => {
-    try { return JSON.parse(localStorage.getItem("usuario") || "{}"); }
-    catch { return {}; }
+    try {
+      return JSON.parse(localStorage.getItem("usuario") || "{}");
+    } catch {
+      return {};
+    }
   })();
   const rol = (usuarioLogueado.rol || "").toLowerCase();
 
@@ -402,17 +413,12 @@ function Usuarios() {
       const d = new Date(f);
       if (isNaN(d.getTime())) return String(f).split("T")[0] || "";
       return d.toISOString().slice(0, 10);
-    } catch { return ""; }
+    } catch {
+      return "";
+    }
   };
 
   // Filtro local
-  const normLoc = (s) =>
-    (s ?? "")
-      .toString()
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/\p{Diacritic}/gu, "");
-
   const usuariosFiltrados = useMemo(() => {
     const q = normLoc(busqueda);
     if (!q) return usuarios;
@@ -451,9 +457,9 @@ function Usuarios() {
       <div className="container mt-4">
         <div className="d-flex align-items-center justify-content-between mb-3">
           <h3 className="mb-0">👥 Gestión de Usuarios</h3>
-          <div>
+          <div className="d-flex flex-wrap gap-2">
             <button
-              className="btn btn-outline-danger me-2"
+              className="btn btn-outline-danger"
               onClick={handleReportePDF}
               disabled={cargandoLista}
               title="Exportar a PDF"
@@ -588,7 +594,7 @@ function Usuarios() {
               </div>
 
               <div className="col-md-4 mb-3">
-                <label className="form-label">Segundo Apellido (opcional)</label>
+                <label className="form-label">Segundo Apellido</label>
                 <input
                   type="text"
                   placeholder="Segundo Apellido"
@@ -686,7 +692,11 @@ function Usuarios() {
                       value={eolicoCodigoInput}
                       onChange={(e) => setEolicoCodigoInput(e.target.value.toUpperCase())}
                     />
-                    <button className="btn btn-outline-success" type="button" onClick={asignarEolicoPorCodigo}>
+                    <button
+                      className="btn btn-outline-success"
+                      type="button"
+                      onClick={asignarEolicoPorCodigo}
+                    >
                       Asignar
                     </button>
                   </div>
@@ -768,37 +778,38 @@ function Usuarios() {
               <table className="table table-striped table-bordered align-middle">
                 <thead className="table-light">
                   <tr>
-                    <th>No.</th>
-                    <th>Usuario (correo)</th>
-                    <th>Rol</th>
-                    <th>Nombres</th>
-                    <th>Primer Apellido</th>
-                    <th>Segundo Apellido</th>
-                    <th>CI</th>
-                    <th>Fecha Nacimiento</th>
-                    <th>Teléfono</th>
-                    <th>Dirección</th>
-                    <th>Código Eólico</th>
-                    <th>Estado</th>
-                    <th style={{ minWidth: 260 }}>Acciones</th>
+                    <th style={{ minWidth: 70 }}>Nro.</th>
+                    <th style={{ minWidth: 200 }}>Usuario (correo)</th>
+                    <th style={{ minWidth: 120 }}>Rol</th>
+                    <th style={{ minWidth: 160 }}>Nombres</th>
+                    <th style={{ minWidth: 160 }}>Primer Apellido</th>
+                    <th style={{ minWidth: 160 }}>Segundo Apellido</th>
+                    <th style={{ minWidth: 120 }}>CI</th>
+                    <th style={{ minWidth: 150 }}>Fecha Nacimiento</th>
+                    <th style={{ minWidth: 130 }}>Teléfono</th>
+                    <th style={{ minWidth: 220 }}>Dirección</th>
+                    <th style={{ minWidth: 130 }}>Código Eólico</th>
+                    <th style={{ minWidth: 120 }}>Estado</th>
+                    <th style={{ minWidth: 320 }}>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {usuariosFiltrados.map((u) => {
+                  {usuariosFiltrados.map((u, idx) => {
+                    const nro = idx + 1; // Nro. en vez de ID
                     const tieneEolico = !!u.eolico_codigo;
                     const habil = !!u.eolico_habilitado;
                     return (
-                      <tr key={u.id_usuario}>
-                        <td>{u.id_usuario}</td>
-                        <td>{u.usuario || ""}</td>
+                      <tr key={u.id_usuario} title={`ID interno: ${u.id_usuario}`}>
+                        <td>{nro}</td>
+                        <td className="text-break">{u.usuario || ""}</td>
                         <td>{u.nombre_rol || ""}</td>
-                        <td>{u.nombres || ""}</td>
-                        <td>{u.primer_apellido || ""}</td>
-                        <td>{u.segundo_apellido || ""}</td>
+                        <td className="text-break">{u.nombres || ""}</td>
+                        <td className="text-break">{u.primer_apellido || ""}</td>
+                        <td className="text-break">{u.segundo_apellido || ""}</td>
                         <td>{u.ci || ""}</td>
                         <td>{fmtFecha(u.fecha_nacimiento)}</td>
                         <td>{u.telefono || ""}</td>
-                        <td>{u.direccion || ""}</td>
+                        <td className="text-break">{u.direccion || ""}</td>
 
                         <td>{tieneEolico ? u.eolico_codigo : "—"}</td>
                         <td>
@@ -819,6 +830,7 @@ function Usuarios() {
                             >
                               Editar
                             </button>
+
                             <button
                               className="btn btn-sm btn-danger"
                               onClick={() => handleEliminar(u.id_usuario)}
